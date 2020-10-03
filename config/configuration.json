@@ -1,0 +1,14 @@
+{
+	"serverPort": ":8085",
+	"dbserver": "",
+	"dbPort": null,
+	"dbName": "",
+	"dbUser": "",
+	"dbPass": "",
+	"adminPath": "client/templates/admin/",
+	"userPath" : "client/templates/member/",
+	"cookieHash": "?drdahcir",
+	"cookieBlock": "!noxin",
+	"cert": "cert/cert.pem",
+	"key": "cert/key.pem"
+}

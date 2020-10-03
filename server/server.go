@@ -3,11 +3,10 @@ package server
 import (
 	"net/http"
 	"time"
-
-	"github.com/gorilla/mux"
 )
 
-func New(mux *mux.Router, serverAddress string) *http.Server {
+// New returns an http.Server
+func New(h http.Handler, serverAddress string) *http.Server {
 	// tlsConfig := &tls.Config{
 	// 	PreferServerCipherSuites: true,
 	// 	CurvePreferences: []tls.CurveID{
@@ -31,7 +30,7 @@ func New(mux *mux.Router, serverAddress string) *http.Server {
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
 		//TLSConfig:    tlsConfig,
-		Handler: mux,
+		Handler: h,
 	}
 	return srv
 }
