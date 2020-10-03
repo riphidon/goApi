@@ -7,6 +7,7 @@ import (
 	"github.com/riphidon/evo/config"
 	"github.com/riphidon/evo/router"
 	"github.com/riphidon/evo/server"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -26,7 +27,8 @@ func main() {
 
 	addr := data.ServerPort
 
-	srv := server.New(r, addr)
+	handler := cors.Default().Handler(r)
+	srv := server.New(handler, addr)
 
 	router.SetupRoutes(r)
 

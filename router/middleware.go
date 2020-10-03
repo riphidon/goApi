@@ -6,16 +6,15 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/riphidon/evo/config"
 	"github.com/riphidon/evo/utils"
 )
 
 var id string
 
-type AppHandler func(w http.ResponseWriter, r *http.Request) error
-type AuthHandler func(w http.ResponseWriter, r *http.Request) error
+type appHandler func(w http.ResponseWriter, r *http.Request) error
+type authHandler func(w http.ResponseWriter, r *http.Request) error
 
-func (fn AppHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Printf("logged %v requested %v", r.RemoteAddr, r.URL)
 	err := fn(w, r)
 	if err != nil {
@@ -23,7 +22,7 @@ func (fn AppHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (fn AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (fn authHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Printf("logged %v requested %v", r.RemoteAddr, r.URL)
 	cookie, errCookie := r.Cookie("session")
 	if errCookie != nil {
@@ -49,24 +48,11 @@ func (fn AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func favicoHandler(w http.ResponseWriter, r *http.Request) error {
-// 	http.Redirect(w, r, "/static/assets/images/logo.ico", http.StatusSeeOther)
-// 	return nil
-// }
-
-//midleware for routes management
+// SetupRoutes acts as a midleware for routes management
 func SetupRoutes(mux *mux.Router) {
-	mux.Handle("/static/", config.FileSystem)
-	mux.Handle("/", AppHandler(getItems)).Methods("GET")
-	mux.Handle("/item/{id}", AppHandler(getItem)).Methods("GET")
-	mux.Handle("/create", AppHandler(createItem)).Methods("POST")
-	mux.Handle("/update/{id}", AppHandler(updateItem)).Methods("PUT")
-	mux.Handle("/delete/{id}", AppHandler(deleteItem)).Methods("DELETE")
-	// mux.Handle("/favicon.ico", AppHandler(favicoHandler))
-
+	mux.Handle("/api/items", appHandler(getItems)).Methods("GET")
+	mux.Handle("/api/item/{id}", appHandler(getItem)).Methods("GET")
+	mux.Handle("/api/items", appHandler(createItem)).Methods("POST")
+	mux.Handle("/api/items/{id}", appHandler(updateItem)).Methods("PUT")
+	mux.Handle("/api/items/{id}", appHandler(deleteItem)).Methods("DELETE")
 }
-
-// mux.Handle("/", routes.Home)
-// mux.Handle("/login", routes.Login)
-// mux.Handle("/register", routes.Register)
-// mux.Handle("/profile/", routes.Profile)

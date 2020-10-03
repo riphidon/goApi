@@ -4,7 +4,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// InitRouter instantiate a mux type router
 func InitRouter() *mux.Router {
-	mux := mux.NewRouter()
-	return mux
+	r := mux.NewRouter()
+	mux.CORSMethodMiddleware(r)
+	return r
 }
