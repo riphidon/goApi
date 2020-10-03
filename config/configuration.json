@@ -1,5 +1,5 @@
 {
-	"serverPort": ":8085",
+	"serverPort": ":6347",
 	"dbserver": "",
 	"dbPort": null,
 	"dbName": "",

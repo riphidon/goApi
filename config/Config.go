@@ -25,7 +25,7 @@ type Config struct {
 }
 
 func (config *Config) ParseConfigFile() (*Config, error) {
-	jsonConfig, err := ioutil.ReadFile("config/Configuration.json")
+	jsonConfig, err := ioutil.ReadFile("config/configuration.json")
 	if err != nil {
 		return config, err
 	}
