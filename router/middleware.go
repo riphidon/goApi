@@ -52,7 +52,7 @@ func (fn authHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func SetupRoutes(mux *mux.Router) {
 	mux.Handle("/api/items", appHandler(getItems)).Methods("GET")
 	mux.Handle("/api/item/{id}", appHandler(getItem)).Methods("GET")
-	mux.Handle("/api/items", appHandler(createItem)).Methods("POST")
-	mux.Handle("/api/items/{id}", appHandler(updateItem)).Methods("PUT")
-	mux.Handle("/api/items/{id}", appHandler(deleteItem)).Methods("DELETE")
+	mux.Handle("/api/item", appHandler(createItem)).Methods("POST")
+	mux.Handle("/api/item/{id}", appHandler(updateItem)).Methods("PUT")
+	mux.Handle("/api/item/{id}", appHandler(deleteItem)).Methods("DELETE")
 }

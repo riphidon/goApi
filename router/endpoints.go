@@ -3,37 +3,44 @@ package router
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
-	"github.com/riphidon/evo/item"
+	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
+	database "github.com/riphidon/evo/database/models"
 )
 
 func getItems(w http.ResponseWriter, r *http.Request) error {
-	_, err := fmt.Fprintf(w, "Items Endpoint Hit")
+	items, err := database.GetItems()
 	if err != nil {
 		return err
 	}
+	json.NewEncoder(w).Encode(items)
 	return nil
 }
 
 func getItem(w http.ResponseWriter, r *http.Request) error {
-	_, err := fmt.Fprintf(w, "Item Endpoint Hit")
+	params := mux.Vars(r)
+	id := params["id"]
+	item, err := database.GetItemByID(id)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Error fetching item")
 	}
+	json.NewEncoder(w).Encode(item)
 	return nil
 }
 
 func createItem(w http.ResponseWriter, r *http.Request) error {
-	_, err := fmt.Fprintf(w, "Item Creation Endpoint Hit")
-	w.Header().Set("content-type", "application/json")
-	item := item.Create(w, r)
-	fmt.Println("item : ")
+	r.Body = http.MaxBytesReader(w, r.Body, 1000)
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("item: %v", item)
-	json.NewEncoder(w).Encode(item)
+	err = database.CreateItem(body)
+	if err != nil {
+		return errors.Wrap(err, "Item Creation Failure")
+	}
 	return nil
 }
 
